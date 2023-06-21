@@ -20,6 +20,7 @@ import static  org.springframework.test.web.servlet.request.MockMvcRequestBuilde
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hamcrest.CoreMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -141,6 +142,35 @@ public class EmployeeControllerTests {
             .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
     }
 
+
+    // Unit test for get  employee by Id rest api - Negative Seneraio
+    @Test
+    public void givenEmployeeObject_whenFindByID_thenReturnEmptyEmployeeObject() throws JsonProcessingException, Exception {
+
+        // Given: Setup object or precondition
+        long employeeId = 1L;
+
+         Employee employee = Employee.builder()
+                .firstName("MOHOSIN")
+                .lastName("MIAH")
+                .email("mohosinmiah1610@gmail.com")
+                .departmentCode("CSE")
+                .build();
+
+
+        BDDMockito.given(employeeService.getEmployeeById(employeeId))
+                .willReturn(null);
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( get("/api/employees/{employeeId}" ,  employeeId) );
+
+        // Then: Verify the output or expected result
+
+        response
+            .andDo(MockMvcResultHandlers.print())   // Display The API Request Details -  Very help full for debugging 
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(""));
+    }
 
 
 }
