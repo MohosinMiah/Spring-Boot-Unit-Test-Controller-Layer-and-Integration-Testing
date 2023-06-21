@@ -110,4 +110,37 @@ public class EmployeeControllerTests {
     }
 
 
+    // Unit test for get  employee by Id rest api
+    @Test
+    public void givenEmployeeObject_whenFindByID_thenReturnEmployeeObject() throws JsonProcessingException, Exception {
+
+        // Given: Setup object or precondition
+        long employeeId = 1L;
+
+         Employee employee = Employee.builder()
+                .firstName("MOHOSIN")
+                .lastName("MIAH")
+                .email("mohosinmiah1610@gmail.com")
+                .departmentCode("CSE")
+                .build();
+
+
+        BDDMockito.given(employeeService.getEmployeeById(employeeId))
+                .willReturn(employee);
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( get("/api/employees/{employeeId}" ,  employeeId) );
+
+        // Then: Verify the output or expected result
+
+        response
+            .andDo(MockMvcResultHandlers.print())   // Display The API Request Details -  Very help full for debugging 
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(employee.getFirstName())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.lastName", CoreMatchers.is(employee.getLastName())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
+    }
+
+
+
 }
