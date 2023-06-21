@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.internal.matchers.Null;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -180,7 +181,7 @@ public class EmployeeControllerTests {
 
     // JUnit test case for update employee by ID 
     @Test
-    public void testUpdateEmployee() throws Exception {
+    public void givenEmployeeObject_whenFindByID_thenUpdateEmptyEmployeeObject() throws Exception {
 
         // Given: Setup object or precondition
         Long employeeId = 1L;
@@ -207,5 +208,37 @@ public class EmployeeControllerTests {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(updatedEmployee.getFirstName())));
     }
+
+
+    // JUnit test case for update employee by ID  - Negative
+    @Test
+    public void givenEmployeeObject_whenFindByID_thenEmptyEmployeeObject() throws Exception {
+
+        // Given: Setup object or precondition
+        Long employeeId = 1L;
+        
+        Employee updatedEmployee = Employee.builder()
+                .id(employeeId)
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
+                .email("updatedemail@example.com")
+                .departmentCode("CSE")
+                .build();
+
+        BDDMockito.given(employeeService.updateEmployee(eq(employeeId), ArgumentMatchers.any( Employee.class ) ))
+                .willReturn(null);
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( put("/api/employees/{employeeID}", employeeId).contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(updatedEmployee))
+        );
+
+        // Then: Verify the output or expected result
+        response
+            .andDo(MockMvcResultHandlers.print())  
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string(""));
+    }
+
 
 }
