@@ -241,4 +241,30 @@ public class EmployeeControllerTests {
     }
 
 
+    // JUnit test case for Delete employee by ID
+    @Test
+    public void givenEmployeeObject_whenFindByID_thenDeleteEmployeeObject() throws Exception {
+
+        // Given: Setup object or precondition
+        Long employeeId = 1L;
+        
+        Employee updatedEmployee = Employee.builder()
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
+                .email("updatedemail@example.com")
+                .departmentCode("CSE")
+                .build();
+
+        BDDMockito.given(employeeService.deleteEmployeeById(employeeId))
+                .willReturn("Deleted");
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( delete("/api/employees/{employeeID}", employeeId) );
+
+        // Then: Verify the output or expected result
+        response
+            .andDo(MockMvcResultHandlers.print())  
+            .andExpect(MockMvcResultMatchers.content().string("Deleted"));
+    }
+
 }
