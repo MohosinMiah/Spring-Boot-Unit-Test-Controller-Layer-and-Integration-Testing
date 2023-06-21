@@ -16,6 +16,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static  org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import java.util.ArrayList;
@@ -172,5 +177,35 @@ public class EmployeeControllerTests {
                 .andExpect(MockMvcResultMatchers.content().string(""));
     }
 
+
+    // JUnit test case for update employee by ID 
+    @Test
+    public void testUpdateEmployee() throws Exception {
+
+        // Given: Setup object or precondition
+        Long employeeId = 1L;
+        
+        Employee updatedEmployee = Employee.builder()
+                .id(employeeId)
+                .firstName("UpdatedFirstName")
+                .lastName("UpdatedLastName")
+                .email("updatedemail@example.com")
+                .departmentCode("CSE")
+                .build();
+
+        BDDMockito.given(employeeService.updateEmployee(eq(employeeId), ArgumentMatchers.any( Employee.class ) ))
+                .willReturn(updatedEmployee);
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( put("/api/employees/{employeeID}", employeeId).contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(updatedEmployee))
+        );
+
+        // Then: Verify the output or expected result
+        response
+            .andDo(MockMvcResultHandlers.print())  
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(updatedEmployee.getFirstName())));
+    }
 
 }
