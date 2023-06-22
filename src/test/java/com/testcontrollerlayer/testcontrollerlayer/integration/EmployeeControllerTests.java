@@ -166,7 +166,7 @@ public class EmployeeControllerTests {
             Employee updateEmployee = Employee.builder()
                 .firstName("updated")
                 .lastName("updated")
-                .email("updated@gmail.com")
+                .email("updatewed@gmail.com")
                 .departmentCode("CSE")
                 .build();
 
@@ -182,5 +182,32 @@ public class EmployeeControllerTests {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(updateEmployee.getFirstName())));
     }
+
+
+    
+    // Integration test case for Delete employee by ID
+    @Test
+    public void givenEmployeeObject_whenFindByID_thenDeleteEmployeeObject() throws Exception {
+
+        // Given: Setup object or precondition
+        Employee employee = Employee.builder()
+                .firstName("UpdatedFirstName")
+                .lastName("UpdawtedLastName")
+                .email("eeee@example.com")
+                .departmentCode("CSE")
+                .build();
+
+        Employee saveEmployee = employeeRepository.save(employee);
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( delete("/api/employees/{employeeID}", saveEmployee.getId() ) );
+
+        // Then: Verify the output or expected result
+        response
+            .andDo(MockMvcResultHandlers.print())  
+            .andExpect(MockMvcResultMatchers.content().string("Deleted"));
+    }
+
+
 
 }
