@@ -27,6 +27,7 @@ import static  org.springframework.test.web.servlet.request.MockMvcRequestBuilde
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest(
     webEnvironment = WebEnvironment.RANDOM_PORT
@@ -112,6 +113,39 @@ public class EmployeeControllerTests {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
            
     }
+
+
+
+
+    // Integration test for get employee find by ID operations
+    @Test
+    @DisplayName("Integration test for get employee find by ID operations")
+    public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject() throws Exception {
+
+       // Given: Setup object or precondition
+        long employeeId = 1L;
+
+         Employee employee = Employee.builder()
+                .firstName("MOHOSIN")
+                .lastName("MIAH")
+                .email("mohosinmiah1610@gmail.com")
+                .departmentCode("CSE")
+                .build();
+        employeeRepository.save(employee);
+
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( get("/api/employees/{employeeId}" ,  employeeId) );
+
+        // Then: Verify the output or expected result
+
+        response
+            .andDo(MockMvcResultHandlers.print())   // Display The API Request Details -  Very help full for debugging 
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(employee.getFirstName())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.lastName", CoreMatchers.is(employee.getLastName())))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
+    }
+
 
 
 
