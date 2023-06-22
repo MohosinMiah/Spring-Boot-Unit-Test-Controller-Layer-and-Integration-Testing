@@ -53,10 +53,10 @@ public class EmployeeServiceImpl implements EmployeeService{
    public Employee updateEmployee(Long employeeID, Employee employee) {
         Employee getEmployee = employeeRepository.findById(employeeID).get();
 
-        getEmployee.setFirstName("Test");
-        getEmployee.setLastName("Last Name");
-        getEmployee.setEmail("mohosin@gmail.com");
-        getEmployee.setDepartmentCode("CSE");
+        getEmployee.setFirstName(employee.getFirstName());
+        getEmployee.setLastName(employee.getLastName());
+        getEmployee.setEmail(employee.getEmail());
+        getEmployee.setDepartmentCode(employee.getDepartmentCode());
 
         Employee updatedEmployee = employeeRepository.save( getEmployee );
 

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testcontrollerlayer.testcontrollerlayer.entity.Employee;
 import com.testcontrollerlayer.testcontrollerlayer.repository.EmployeeRepository;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static  org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -149,6 +150,37 @@ public class EmployeeControllerTests {
 
 
 
+    // Integration test case for update employee by ID 
+    @Test
+    public void givenEmployeeObject_whenFindByID_thenUpdateEmptyEmployeeObject() throws Exception {
 
+        // Given: Setup object or precondition
+        Employee employee = Employee.builder()
+                .firstName("MOHOSIN")
+                .lastName("MIAH")
+                .email("mohosinmiah1610@gmail.com")
+                .departmentCode("CSE")
+                .build();
+        employeeRepository.save(employee);
+
+            Employee updateEmployee = Employee.builder()
+                .firstName("updated")
+                .lastName("updated")
+                .email("updated@gmail.com")
+                .departmentCode("CSE")
+                .build();
+
+        employeeRepository.save(employee);
+        // When: Action or behavior that we are going to test
+        ResultActions response =  mockMvc.perform( put("/api/employees/{employeeID}", employee.getId()).contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(updateEmployee))
+        );
+
+        // Then: Verify the output or expected result
+        response
+            .andDo(MockMvcResultHandlers.print())  
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(updateEmployee.getFirstName())));
+    }
 
 }
