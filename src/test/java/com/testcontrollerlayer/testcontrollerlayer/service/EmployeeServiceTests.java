@@ -189,14 +189,12 @@ public class EmployeeServiceTests {
         // Then: Verify the output or expected result
         assertThat(updatedEmployee).isNotNull();
         assertThat(updatedEmployee.getId()).isEqualTo(employeeId);
-
     }
 
     // JQunit test for delete employee by ID operations
     @Test
     @DisplayName("JUnit test for deleteEmployee operation")
     public void givenValidEmployeeId_whenDeleteEmployee_thenEmployeeDeletedSuccessfully() {
-       
         // Given: Setup objects or preconditions
         final Long employeeId = employee.getId();
         Mockito.when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));

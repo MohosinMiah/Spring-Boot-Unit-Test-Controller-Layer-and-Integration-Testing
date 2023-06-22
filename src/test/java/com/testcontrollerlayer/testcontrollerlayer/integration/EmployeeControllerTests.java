@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testcontrollerlayer.testcontrollerlayer.entity.Employee;
 import com.testcontrollerlayer.testcontrollerlayer.repository.EmployeeRepository;
 import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.mockito.ArgumentMatchers.isNull;
 import static  org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import java.util.Arrays;
@@ -131,10 +131,11 @@ public class EmployeeControllerTests {
                 .email("mohosinmiah1610@gmail.com")
                 .departmentCode("CSE")
                 .build();
-        employeeRepository.save(employee);
+
+        Employee saveEmployee = employeeRepository.save(employee);
 
         // When: Action or behavior that we are going to test
-        ResultActions response =  mockMvc.perform( get("/api/employees/{employeeId}" ,  employeeId) );
+        ResultActions response =  mockMvc.perform( get("/api/employees/{employeeId}" ,  saveEmployee.getId()) );
 
         // Then: Verify the output or expected result
 
@@ -145,6 +146,7 @@ public class EmployeeControllerTests {
             .andExpect(MockMvcResultMatchers.jsonPath("$.lastName", CoreMatchers.is(employee.getLastName())))
             .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
     }
+
 
 
 
