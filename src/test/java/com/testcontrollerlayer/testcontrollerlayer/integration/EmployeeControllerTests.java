@@ -2,9 +2,11 @@ package com.testcontrollerlayer.testcontrollerlayer.integration;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,8 +21,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testcontrollerlayer.testcontrollerlayer.entity.Employee;
 import com.testcontrollerlayer.testcontrollerlayer.repository.EmployeeRepository;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static  org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest(
     webEnvironment = WebEnvironment.RANDOM_PORT
@@ -70,5 +76,43 @@ public class EmployeeControllerTests {
             .andExpect(MockMvcResultMatchers.jsonPath("$.lastName", CoreMatchers.is(employee.getLastName())))
             .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
     }
+
+
+    // Integration test for get all employee operations
+    @Test
+    public void givenEmployeeObject_whenGetAllEmployee_thenReturnAllEmployee() throws Exception {
+
+       // Given: Setup objects or preconditions
+        Employee employeeOne = Employee.builder()
+            .id(1L)
+            .firstName("MOHOSIN")
+            .lastName("MIAH")
+            .email("mohosinmiah1610@gmail.com")
+            .departmentCode("CSE")
+            .build();
+
+        Employee employeeTwo = Employee.builder()
+            .id(2L)  // Unique ID for the second employee
+            .firstName("JOHN")
+            .lastName("DOE")
+            .email("johndoe@gmail.com")
+            .departmentCode("IT")
+            .build();
+
+            employeeRepository.save(employeeOne);
+            employeeRepository.save(employeeTwo);          
+
+            // When: Perform the action or behavior being tested
+             ResultActions response =  mockMvc.perform( get("/api/employees") );
+
+            // Then: Verify the output or expected result
+           response
+            .andDo(MockMvcResultHandlers.print())   // Display The API Request Details -  Very help full for debugging 
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+           
+    }
+
+
 
 }
