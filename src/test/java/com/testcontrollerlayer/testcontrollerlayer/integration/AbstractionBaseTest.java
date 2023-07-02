@@ -6,7 +6,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
-abstract  class AbstractionBaseTest {
+public abstract  class AbstractionBaseTest {
      static final MySQLContainer MY_SQL_CONTAINER;
 
     static {

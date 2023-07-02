@@ -13,11 +13,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.testcontrollerlayer.testcontrollerlayer.entity.Employee;
+import com.testcontrollerlayer.testcontrollerlayer.integration.AbstractionBaseTest;
 
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class EmployeeRepositoryIT {
+public class EmployeeRepositoryIT extends AbstractionBaseTest{
     
     @Autowired
     private EmployeeRepository employeeRepository;
