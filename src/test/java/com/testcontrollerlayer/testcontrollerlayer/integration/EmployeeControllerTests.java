@@ -34,7 +34,7 @@ import java.util.Optional;
     webEnvironment = WebEnvironment.RANDOM_PORT
 )
 @AutoConfigureMockMvc
-public class EmployeeControllerTests {
+public class EmployeeControllerTests extends AbstractionBaseTest{
     
     @Autowired
     private MockMvc mockMvc;

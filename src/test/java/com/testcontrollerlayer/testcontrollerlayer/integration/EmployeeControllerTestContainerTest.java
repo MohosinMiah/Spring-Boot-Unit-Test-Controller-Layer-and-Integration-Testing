@@ -40,18 +40,18 @@ import java.util.Optional;
     webEnvironment = WebEnvironment.RANDOM_PORT
 )
 @AutoConfigureMockMvc
-@Testcontainers
-public class EmployeeControllerTestContainerTest {
+// @Testcontainers
+public class EmployeeControllerTestContainerTest extends AbstractionBaseTest{
     
-    @Container
-    private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.30"));
+    // @Container
+    // private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.30"));
 
-    @DynamicPropertySource
-    static void setupProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mySQLContainer::getUsername);
-        registry.add("spring.datasource.password", mySQLContainer::getPassword);
-    }
+    // @DynamicPropertySource
+    // static void setupProperties(DynamicPropertyRegistry registry) {
+    //     registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+    //     registry.add("spring.datasource.username", mySQLContainer::getUsername);
+    //     registry.add("spring.datasource.password", mySQLContainer::getPassword);
+    // }
  
     @Autowired
     private MockMvc mockMvc;
